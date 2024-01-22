@@ -33,9 +33,10 @@ class Compiler:
         self.dwell_time = dwell_time
         self.custom_header = custom_header
         self.custom_footer = custom_footer
+        self.unit = unit
 
-        if (unit is not None) and (unit not in UNITS):
-            raise ValueError(f"Unknown unit {unit}. Please specify one of the following: {UNITS}")
+        if (self.unit is not None) and (self.unit not in UNITS):
+            raise ValueError(f"Unknown unit {self.unit}. Please specify one of the following: {UNITS}")
 
         if self.custom_header is not None:
             self.header = [self.interface.fast_movement(), self.interface.set_unit(self.unit), self.interface.right_direction_rotation(), self.custom_header]
@@ -47,7 +48,6 @@ class Compiler:
         else:
             self.footer = [self.interface.drill_to_safe_position()]
 
-        self.unit = unit
         self.body = []
 
     def compile(self, passes=1):
