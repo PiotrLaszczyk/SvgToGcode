@@ -114,7 +114,7 @@ class Compiler:
 
             code = [self.interface.drill_to_safe_position(), 
                     self.interface.set_movement_speed(self.movement_speed),
-                    self.interface.linear_move(start.x, start.y, start.z), 
+                    self.interface.linear_move(start.x, start.y), 
                     self.interface.set_movement_speed(self.cutting_speed),
                     self.interface.set_drill_to_working_position(3)]
 
@@ -122,7 +122,7 @@ class Compiler:
                 code = [self.interface.dwell(self.dwell_time)] + code
 
         for line in line_chain:
-            code.append(self.interface.linear_move(line.end.x, line.end.y,line.end.z))
+            code.append(self.interface.linear_move(line.end.x, line.end.y))
 
         self.body.extend(code)
 
