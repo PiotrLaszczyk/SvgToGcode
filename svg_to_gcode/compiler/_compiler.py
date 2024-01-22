@@ -38,10 +38,9 @@ class Compiler:
             raise ValueError(f"Unknown unit {unit}. Please specify one of the following: {UNITS}")
 
         if self.custom_header is not None:
-            self.header = [self.interface.fast_movement(), self.interface.right_direction_rotation(), self.custom_header]
+            self.header = [self.interface.fast_movement(), self.interface.set_unit(self.unit), self.interface.right_direction_rotation(), self.custom_header]
         else:
-            self.header = [self.interface.fast_movement(), self.interface.right_direction_rotation()]
-        self.header.reverse()
+            self.header = [self.interface.fast_movement(), self.interface.set_unit(self.unit), self.interface.right_direction_rotation()]  #, self.interface.drill_to_safe_position()
 
         if self.custom_footer is not None:
             self.footer = self.custom_footer
@@ -68,7 +67,6 @@ class Compiler:
         gcode = []
 
         gcode.extend(self.header)
-        gcode.append(self.interface.set_unit(self.unit))
         for i in range(passes):
             gcode.extend(self.body)
 
@@ -123,7 +121,7 @@ class Compiler:
 
             code = [self.interface.drill_to_safe_position(), 
                     self.interface.set_movement_speed(self.movement_speed),
-                    self.interface.linear_move(start.x, start.y, 0.2), 
+                    self.interface.linear_move(start.x, start.y, 0.1), 
                     self.interface.set_movement_speed(self.cutting_speed),
                     self.interface.set_drill_to_working_position(self.pass_depth)]
 

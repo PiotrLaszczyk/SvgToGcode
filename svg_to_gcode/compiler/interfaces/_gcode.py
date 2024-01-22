@@ -61,7 +61,7 @@ class Gcode(Interface):
         return command
 
     def drill_to_safe_position(self):
-        safeZposition = 0.2
+        safeZposition = 0.1
         return "G1 F120 Z{:.6f}".format(safeZposition)
 
     def set_drill_to_working_position(self, workingDeep):
