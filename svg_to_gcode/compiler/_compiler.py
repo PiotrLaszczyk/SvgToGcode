@@ -20,11 +20,11 @@ class Compiler:
         :param interface_class: Specify which interface to use. The most common is the gcode interface.
         :param movement_speed: the speed at which to move the tool when moving. (units are determined by the printer)
         :param cutting_speed: the speed at which to move the tool when cutting. (units are determined by the printer)
-        :param pass_depth: AKA, the depth your laser cuts in a pass.
+        :param pass_depth: AKA, the depth your drilling machine cuts in a pass.
         :param dwell_time: the number of ms the tool should wait before moving to another cut. Useful for pen plotters.
         :param unit: specify a unit to the machine
-        :param custom_header: A list of commands to be executed before all generated commands. Default is [laser_off,]
-        :param custom_footer: A list of commands to be executed after all generated commands. Default is [laser_off,]
+        :param custom_header: A list of commands to be executed before all generated commands. Default is [drill_to_safe_position,]
+        :param custom_footer: A list of commands to be executed after all generated commands. Default is [drill_to_safe_position,]
         """
         self.interface = interface_class()
         self.movement_speed = movement_speed
@@ -38,10 +38,10 @@ class Compiler:
         self.unit = unit
 
         if custom_header is None:
-            custom_header = [self.interface.laser_off()]
+            custom_header = [self.interface.drill_to_safe_position()]
 
         if custom_footer is None:
-            custom_footer = [self.interface.laser_off()]
+            custom_footer = [self.interface.drill_to_safe_position()]
 
         self.header = [self.interface.set_absolute_coordinates(),
                        self.interface.set_movement_speed(self.movement_speed)] + custom_header
@@ -69,8 +69,8 @@ class Compiler:
         for i in range(passes):
             gcode.extend(self.body)
 
-            if i < passes - 1:  # If it isn't the last pass, turn off the laser and move down
-                gcode.append(self.interface.laser_off())
+            if i < passes - 1:  # If it isn't the last pass, put drill to safe position and move down
+                gcode.append(self.interface.drill_to_safe_position())
 
                 if self.pass_depth > 0:
                     gcode.append(self.interface.set_relative_coordinates())
@@ -109,12 +109,12 @@ class Compiler:
 
         start = line_chain.get(0).start
 
-        # Don't dwell and turn off laser if the new start is at the current position
+        # Don't dwell and turn drilling machine to safe position if the new start is at the current position
         if self.interface.position is None or abs(self.interface.position - start) > TOLERANCES["operation"]:
 
-            code = [self.interface.laser_off(), self.interface.set_movement_speed(self.movement_speed),
+            code = [self.interface.drill_to_safe_position(), self.interface.set_movement_speed(self.movement_speed),
                     self.interface.linear_move(start.x, start.y), self.interface.set_movement_speed(self.cutting_speed),
-                    self.interface.set_laser_power(1)]
+                    self.interface.set_drill_to_working_position(3)]
 
             if self.dwell_time > 0:
                 code = [self.interface.dwell(self.dwell_time)] + code

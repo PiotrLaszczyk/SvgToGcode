@@ -28,23 +28,22 @@ class Interface:
         """
         raise NotImplementedError("Interface class must implement the linear_move command")
 
-    def laser_off(self) -> str:
+    def drill_to_safe_position(self) -> str:
         """
-        Powers off the laser beam.
+        Move drill to safe position.
 
         :return: Appropriate command.
         """
-        raise NotImplementedError("Interface class must implement the laser_off command")
+        raise NotImplementedError("Interface class must implement the drill_to_safe_position command")
 
-    def set_laser_power(self, power) -> str:
+    def set_drill_to_working_position(self, workingDeep) -> str:
         """
-        If the target machine supports pwm, change the laser power. Regardless of pwm support, powers on the laser beam
-        for values of power > 0.
+        Move drill to working position.
 
-        :param power: Defines the power level of the laser. Valid values range between 0 and 1.
+        :param workingDeep: Defines deepens of drilling.
         :return: Appropriate command.
         """
-        raise NotImplementedError("Interface class must implement the laser_power command")
+        raise NotImplementedError("Interface class must implement the set_drill_to_working_position command")
 
     def set_absolute_coordinates(self) -> str:
         """

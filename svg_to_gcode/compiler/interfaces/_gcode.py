@@ -38,7 +38,7 @@ class Gcode(Interface):
 
         if self._current_speed != self._next_speed:
             self._current_speed = self._next_speed
-            command += f" F{self._current_speed}"
+            command += " F{}".format(self._current_speed)
 
         # Move if not 0 and not None
         command += f" X{x:.{self.precision}f}" if x is not None else ''
@@ -55,19 +55,16 @@ class Gcode(Interface):
             self.position = Vector(x, y)
 
         if verbose:
-            print(f"Move to {x}, {y}, {z}")
+            print("Move to {}, {}, {}".format(x, y, z))
 
         return command + ';'
 
-    def laser_off(self):
-        return f"M5;"
+    def drill_to_safe_position(self):
+        safeZposition = 0.01
+        return "G1 F120 Z{};".format(safeZposition)
 
-    def set_laser_power(self, power):
-        if power < 0 or power > 1:
-            raise ValueError(f"{power} is out of bounds. Laser power must be given between 0 and 1. "
-                             f"The interface will scale it correctly.")
-
-        return f"M3 S{formulas.linear_map(0, 255, power)};"
+    def set_drill_to_working_position(self, workingDeep):
+        return "G1 F120 Z{};".format(-1 * workingDeep)
 
     def set_absolute_coordinates(self):
         return "G90;"
@@ -76,7 +73,7 @@ class Gcode(Interface):
         return "G91;"
 
     def dwell(self, milliseconds):
-        return f"G4 P{milliseconds}"
+        return "G4 P{}".format(milliseconds)
 
     def set_origin_at_position(self):
         self.position = Vector(0, 0)
