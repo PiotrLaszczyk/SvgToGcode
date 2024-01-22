@@ -77,7 +77,7 @@ class Gcode(Interface):
         self.position = Vector(0, 0)
         return "G92 X{:.6f} Y{:.6f} Z{:.6f}".format(0, 0, 0)
 
-    def unit(self, unit):
+    def set_unit(self, unit):
         if unit == "mm":
             return "G21"
 
