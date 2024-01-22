@@ -43,8 +43,7 @@ class Compiler:
         if custom_footer is None:
             custom_footer = [self.interface.drill_to_safe_position()]
 
-        self.header = [self.interface.fast_movement(),
-                       self.interface.set_movement_speed(self.movement_speed)] + custom_header
+        self.header = [self.interface.fast_movement(), self.interface.right_direction_rotation()] + custom_header
         self.footer = custom_footer
         self.body = []
 
