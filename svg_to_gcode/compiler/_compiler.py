@@ -114,9 +114,9 @@ class Compiler:
 
             code = [self.interface.drill_to_safe_position(), 
                     self.interface.set_movement_speed(self.movement_speed),
-                    self.interface.linear_move(start.x, start.y, 0.1), 
+                    self.interface.linear_move(start.x, start.y, 0.2), 
                     self.interface.set_movement_speed(self.cutting_speed),
-                    self.interface.set_drill_to_working_position(3)]
+                    self.interface.set_drill_to_working_position(self.pass_depth)]
 
             if self.dwell_time > 0:
                 code = [self.interface.dwell(self.dwell_time)] + code

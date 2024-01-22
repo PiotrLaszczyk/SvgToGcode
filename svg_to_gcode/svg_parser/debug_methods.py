@@ -61,7 +61,7 @@ def arrow_defs(arrow_scale=1, arrow_id="arrow-346"):
     arrow.set("d", "M 5 0 l 10 5 l -10 5 z")
     arrow.set("fill", "yellow")
     arrow.set("stroke", "black")
-    arrow.set("stroke-width", "0.1")
+    arrow.set("stroke-width", "0.2")
     marker.append(arrow)
     
     return defs
