@@ -40,7 +40,8 @@ class Compiler:
         if self.custom_header is not None:
             self.header = [self.interface.fast_movement(), self.interface.right_direction_rotation(), self.custom_header]
         else:
-            self.header = [self.interface.fast_movement(), self.interface.right_direction_rotation(), self.interface.drill_to_safe_position()]
+            self.header = [self.interface.fast_movement(), self.interface.right_direction_rotation()]
+        self.header.reverse()
 
         if self.custom_footer is not None:
             self.footer = self.custom_footer
