@@ -41,9 +41,9 @@ class Gcode(Interface):
             command += " F{}".format(self._current_speed)
 
         # Move if not 0 and not None
-        command += f" X{x:.{self.precision}f}" if x is not None else ''
-        command += f" Y{y:.{self.precision}f}" if y is not None else ''
-        command += f" Z{z:.{self.precision}f}" if z is not None else ''
+        command += " X{:.6f}".format(x) if x is not None else ''
+        command += " Y{:.6f}".format(y) if y is not None else ''
+        command += " Z{:.6f}".format(z) if z is not None else ''
 
         if self.position is not None or (x is not None and y is not None):
             if x is None:
@@ -55,16 +55,16 @@ class Gcode(Interface):
             self.position = Vector(x, y)
 
         if verbose:
-            print("Move to {}, {}, {}".format(x, y, z))
+            print("Move to {:.6f}, {:.6f}, {:.6f}".format(x, y, z))
 
         return command + ';'
 
     def drill_to_safe_position(self):
         safeZposition = 0.01
-        return "G1 F120 Z{};".format(safeZposition)
+        return "G1 F120 Z{:.6f};".format(safeZposition)
 
     def set_drill_to_working_position(self, workingDeep):
-        return "G1 F120 Z{};".format(-1 * workingDeep)
+        return "G1 F120 Z{:.6f};".format(-1 * workingDeep)
 
     def set_absolute_coordinates(self):
         return "G90;"
@@ -77,7 +77,7 @@ class Gcode(Interface):
 
     def set_origin_at_position(self):
         self.position = Vector(0, 0)
-        return "G92 X0 Y0 Z0;"
+        return "G92 X{:.6f} Y{:.6f} Z{:.6f};".format(0, 0, 0)
 
     def set_unit(self, unit):
         if unit == "mm":

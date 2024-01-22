@@ -112,15 +112,17 @@ class Compiler:
         # Don't dwell and turn drilling machine to safe position if the new start is at the current position
         if self.interface.position is None or abs(self.interface.position - start) > TOLERANCES["operation"]:
 
-            code = [self.interface.drill_to_safe_position(), self.interface.set_movement_speed(self.movement_speed),
-                    self.interface.linear_move(start.x, start.y), self.interface.set_movement_speed(self.cutting_speed),
+            code = [self.interface.drill_to_safe_position(), 
+                    self.interface.set_movement_speed(self.movement_speed),
+                    self.interface.linear_move(start.x, start.y, start.z), 
+                    self.interface.set_movement_speed(self.cutting_speed),
                     self.interface.set_drill_to_working_position(3)]
 
             if self.dwell_time > 0:
                 code = [self.interface.dwell(self.dwell_time)] + code
 
         for line in line_chain:
-            code.append(self.interface.linear_move(line.end.x, line.end.y))
+            code.append(self.interface.linear_move(line.end.x, line.end.y,line.end.z))
 
         self.body.extend(code)
 
