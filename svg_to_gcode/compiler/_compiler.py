@@ -43,7 +43,7 @@ class Compiler:
         if custom_footer is None:
             custom_footer = [self.interface.drill_to_safe_position()]
 
-        self.header = [self.interface.set_absolute_coordinates(),
+        self.header = [self.interface.fast_movement(),
                        self.interface.set_movement_speed(self.movement_speed)] + custom_header
         self.footer = custom_footer
         self.body = []
@@ -114,7 +114,7 @@ class Compiler:
 
             code = [self.interface.drill_to_safe_position(), 
                     self.interface.set_movement_speed(self.movement_speed),
-                    self.interface.linear_move(start.x, start.y), 
+                    self.interface.linear_move(start.x, start.y, 0.1), 
                     self.interface.set_movement_speed(self.cutting_speed),
                     self.interface.set_drill_to_working_position(3)]
 
@@ -122,7 +122,7 @@ class Compiler:
                 code = [self.interface.dwell(self.dwell_time)] + code
 
         for line in line_chain:
-            code.append(self.interface.linear_move(line.end.x, line.end.y))
+            code.append(self.interface.linear_move(line.end.x, line.end.y, -self.pass_depth))
 
         self.body.extend(code)
 

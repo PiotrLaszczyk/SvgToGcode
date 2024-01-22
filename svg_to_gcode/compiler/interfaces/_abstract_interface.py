@@ -57,6 +57,9 @@ class Interface:
         """
         raise NotImplementedError("Interface class must implement the set_absolute_coordinates command")
 
+    def fast_movement(self) -> str:
+        raise NotImplementedError("Interface class must implement the fast_movement command")
+
     def set_relative_coordinates(self) -> str:
         """
         Make the coordinate space relative. ie. move relative to current position not origin.

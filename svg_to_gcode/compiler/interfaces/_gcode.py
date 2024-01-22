@@ -36,9 +36,7 @@ class Gcode(Interface):
         # Todo, investigate G0 command and replace movement speeds with G1 (normal speed) and G0 (fast move)
         command = "G1"
 
-        if self._current_speed != self._next_speed:
-            self._current_speed = self._next_speed
-            command += " F{}".format(self._current_speed)
+        command += " F{}".format(self._current_speed)
 
         # Move if not 0 and not None
         command += " X{:.6f}".format(x) if x is not None else ''
@@ -57,36 +55,39 @@ class Gcode(Interface):
         if verbose:
             print("Move to {:.6f}, {:.6f}, {:.6f}".format(x, y, z))
 
-        return command + ';'
+        return command
 
     def drill_to_safe_position(self):
-        safeZposition = 0.01
-        return "G1 F120 Z{:.6f};".format(safeZposition)
+        safeZposition = 0.1
+        return "G1 F120 Z{:.6f}".format(safeZposition)
 
     def set_drill_to_working_position(self, workingDeep):
-        return "G1 F120 Z{:.6f};".format(-1 * workingDeep)
+        return "G1 F120 Z{:.6f}".format(-1 * workingDeep)
 
     def set_absolute_coordinates(self):
-        return "G90;"
+        return "G90"
 
     def set_relative_coordinates(self):
-        return "G91;"
+        return "G91"
 
     def dwell(self, milliseconds):
         return "G4 P{}".format(milliseconds)
 
     def set_origin_at_position(self):
         self.position = Vector(0, 0)
-        return "G92 X{:.6f} Y{:.6f} Z{:.6f};".format(0, 0, 0)
+        return "G92 X{:.6f} Y{:.6f} Z{:.6f}".format(0, 0, 0)
 
-    def set_unit(self, unit):
+    def unit(self, unit):
         if unit == "mm":
-            return "G21;"
+            return "G21"
 
         if unit == "in":
-            return "G20;"
+            return "G20"
 
         return ''
 
     def home_axes(self):
-        return "G28;"
+        return "G28"
+
+    def fast_movement(self):
+        return "G00"
