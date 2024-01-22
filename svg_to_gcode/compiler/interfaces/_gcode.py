@@ -36,6 +36,9 @@ class Gcode(Interface):
         # Todo, investigate G0 command and replace movement speeds with G1 (normal speed) and G0 (fast move)
         command = "G1"
 
+        if self._current_speed != self._next_speed:
+            self._current_speed = self._next_speed
+
         command += " F{}".format(self._current_speed)
 
         # Move if not 0 and not None
