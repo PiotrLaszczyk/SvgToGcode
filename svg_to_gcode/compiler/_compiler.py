@@ -31,20 +31,23 @@ class Compiler:
         self.cutting_speed = cutting_speed
         self.pass_depth = abs(pass_depth)
         self.dwell_time = dwell_time
+        self.custom_header = custom_header
+        self.custom_footer = custom_footer
 
         if (unit is not None) and (unit not in UNITS):
             raise ValueError(f"Unknown unit {unit}. Please specify one of the following: {UNITS}")
-        
+
+        if self.custom_header is not None:
+            self.header = [self.interface.fast_movement(), self.interface.right_direction_rotation(), self.custom_header]
+        else:
+            self.header = [self.interface.fast_movement(), self.interface.right_direction_rotation(), self.interface.drill_to_safe_position()]
+
+        if self.custom_footer is not None:
+            self.footer = self.custom_footer
+        else:
+            self.footer = [self.interface.drill_to_safe_position()]
+
         self.unit = unit
-
-        if custom_header is None:
-            custom_header = [self.interface.drill_to_safe_position()]
-
-        if custom_footer is None:
-            custom_footer = [self.interface.drill_to_safe_position()]
-
-        self.header = [self.interface.fast_movement(), self.interface.right_direction_rotation()] + custom_header
-        self.footer = custom_footer
         self.body = []
 
     def compile(self, passes=1):
@@ -80,7 +83,13 @@ class Compiler:
 
         gcode = filter(lambda command: len(command) > 0, gcode)
 
-        return '\n'.join(gcode)
+        gcodeWithLinenNmbers = []
+        lineCounter = 1
+        for _code in gcode:
+            gcodeWithLinenNmbers.append("N{} {}".format(lineCounter, _code))
+            lineCounter += 1
+
+        return '\n'.join(gcodeWithLinenNmbers)
 
     def compile_to_file(self, file_name: str, passes=1):
         """

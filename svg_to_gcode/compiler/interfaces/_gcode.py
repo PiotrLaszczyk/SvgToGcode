@@ -12,18 +12,12 @@ verbose = False
 class Gcode(Interface):
 
     def __init__(self):
-        self.lineCounter = 1
         self.position = None
         self._next_speed = None
         self._current_speed = None
 
         # Round outputs to the same number of significant figures as the operational tolerance.
         self.precision = abs(round(math.log(TOLERANCES["operation"], 10)))
-
-    def addLineNumber(self, cmd):
-        updatedCmd = "N{} {}".format(self.lineCounter, cmd)
-        self.lineCounter += 1
-        return updatedCmd
     
     def set_movement_speed(self, speed):
         self._next_speed = speed
@@ -64,42 +58,42 @@ class Gcode(Interface):
         if verbose:
             print("Move to {:.6f}, {:.6f}, {:.6f}".format(x, y, z))
 
-        return self.addLineNumber(command)
+        return command
 
     def drill_to_safe_position(self):
         safeZposition = 0.2
-        return self.addLineNumber("G1 F120 Z{:.6f}".format(safeZposition))
+        return "G1 F120 Z{:.6f}".format(safeZposition)
 
     def set_drill_to_working_position(self, workingDeep):
-        return self.addLineNumber("G1 F120 Z{:.6f}".format(-1 * workingDeep))
+        return "G1 F120 Z{:.6f}".format(-1 * workingDeep)
 
     def set_absolute_coordinates(self):
-        return self.addLineNumber("G90")
+        return "G90"
 
     def set_relative_coordinates(self):
-        return self.addLineNumber("G91")
+        return "G91"
 
     def dwell(self, milliseconds):
-        return self.addLineNumber("G4 P{}".format(milliseconds))
+        return "G4 P{}".format(milliseconds)
 
     def set_origin_at_position(self):
         self.position = Vector(0, 0)
-        return self.addLineNumber("G92 X{:.6f} Y{:.6f} Z{:.6f}".format(0, 0, 0))
+        return "G92 X{:.6f} Y{:.6f} Z{:.6f}".format(0, 0, 0)
 
     def set_unit(self, unit):
         if unit == "mm":
-            return self.addLineNumber("G21")
+            return "G21"
 
         if unit == "in":
-            return self.addLineNumber("G20")
+            return "G20"
 
         return ''
 
     def home_axes(self):
-        return self.addLineNumber("G28")
+        return "G28"
 
     def fast_movement(self):
-        return self.addLineNumber("G00")
+        return "G00"
     
     def right_direction_rotation(self):
-        return self.addLineNumber("M03")
+        return "M03"
