@@ -39,9 +39,9 @@ class Compiler:
             raise ValueError(f"Unknown unit {self.unit}. Please specify one of the following: {UNITS}")
 
         if self.custom_header is not None:
-            self.header = [self.interface.fast_movement(), self.interface.set_unit(self.unit), self.interface.right_direction_rotation(), self.custom_header]
+            self.header = [self.interface.fast_movement(), self.interface.set_unit(self.unit), self.interface.right_direction_rotation(), self.interface.set_initial_coordinates(), self.custom_header]
         else:
-            self.header = [self.interface.fast_movement(), self.interface.set_unit(self.unit), self.interface.right_direction_rotation()]  #, self.interface.drill_to_safe_position()
+            self.header = [self.interface.fast_movement(), self.interface.set_unit(self.unit), self.interface.right_direction_rotation(), self.interface.set_initial_coordinates()]  #, self.interface.drill_to_safe_position()
 
         if self.custom_footer is not None:
             self.footer = self.custom_footer

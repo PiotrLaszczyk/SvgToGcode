@@ -57,6 +57,9 @@ class Interface:
         """
         raise NotImplementedError("Interface class must implement the set_absolute_coordinates command")
 
+    def set_initial_coordinates(self) -> str:
+        raise NotImplementedError("Interface class must implement the set_initial_coordinates command")
+
     def fast_movement(self) -> str:
         raise NotImplementedError("Interface class must implement the fast_movement command")
 
