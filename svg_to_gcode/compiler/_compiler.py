@@ -133,7 +133,7 @@ class Compiler:
 
             code = [self.interface.drill_to_safe_position(), 
                     self.interface.set_movement_speed(self.movement_speed),
-                    self.interface.linear_move(start.x, start.y, 0.3), 
+                    self.interface.linear_move(start.x, start.y, 1.0), 
                     self.interface.set_movement_speed(self.cutting_speed),
                     self.interface.set_drill_to_working_position(self.pass_depth)]
 
