@@ -61,14 +61,14 @@ class Gcode(Interface):
         return command
 
     def drill_to_safe_position(self):
-        safeZposition = 0.3
+        safeZposition = 1.0
         return "G1 F120 Z{:.6f}".format(safeZposition)
 
     def set_drill_to_working_position(self, workingDeep):
         return "G1 F120 Z{:.6f}".format(-1 * workingDeep)
 
     def set_initial_coordinates(self):
-        safeZposition = 0.3
+        safeZposition = 1.0
         return "G0 X0.000000 Y0.000000 Z{:.6f}".format(safeZposition)
 
     def set_absolute_coordinates(self):

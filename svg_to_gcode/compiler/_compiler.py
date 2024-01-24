@@ -39,9 +39,20 @@ class Compiler:
             raise ValueError(f"Unknown unit {self.unit}. Please specify one of the following: {UNITS}")
 
         if self.custom_header is not None:
-            self.header = [self.interface.fast_movement(), self.interface.set_unit(self.unit), self.interface.right_direction_rotation(), self.interface.set_initial_coordinates(), self.custom_header]
+            self.header = [self.interface.fast_movement(), 
+                           self.interface.set_unit(self.unit), 
+                           self.interface.right_direction_rotation(), 
+                           self.interface.set_initial_coordinates(), 
+                           self.interface.set_absolute_coordinates(),
+                           self.custom_header
+                           ]
         else:
-            self.header = [self.interface.fast_movement(), self.interface.set_unit(self.unit), self.interface.right_direction_rotation(), self.interface.set_initial_coordinates()]  #, self.interface.drill_to_safe_position()
+            self.header = [self.interface.fast_movement(), 
+                           self.interface.set_unit(self.unit), 
+                           self.interface.right_direction_rotation(), 
+                           self.interface.set_initial_coordinates(),
+                           self.interface.set_absolute_coordinates(),
+                           ]  #, self.interface.drill_to_safe_position()
 
         if self.custom_footer is not None:
             self.footer = self.custom_footer
@@ -72,11 +83,12 @@ class Compiler:
 
             if i < passes - 1:  # If it isn't the last pass, put drill to safe position and move down
                 gcode.append(self.interface.drill_to_safe_position())
+                gcode.append(self.interface.set_initial_coordinates())
 
-                if self.pass_depth > 0:
-                    gcode.append(self.interface.set_relative_coordinates())
-                    gcode.append(self.interface.linear_move(z=-self.pass_depth))
-                    gcode.append(self.interface.set_absolute_coordinates())
+                #if self.pass_depth > 0:
+                #    gcode.append(self.interface.set_relative_coordinates())
+                #    gcode.append(self.interface.linear_move(z=-self.pass_depth))
+                #    gcode.append(self.interface.set_absolute_coordinates())
 
         gcode.extend(self.footer)
 
@@ -121,7 +133,7 @@ class Compiler:
 
             code = [self.interface.drill_to_safe_position(), 
                     self.interface.set_movement_speed(self.movement_speed),
-                    self.interface.linear_move(start.x, start.y, 0.1), 
+                    self.interface.linear_move(start.x, start.y, 0.3), 
                     self.interface.set_movement_speed(self.cutting_speed),
                     self.interface.set_drill_to_working_position(self.pass_depth)]
 
